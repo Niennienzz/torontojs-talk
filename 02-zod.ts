@@ -6,13 +6,12 @@ const newUserSchema = z.object({
   password: z.string().min(10).max(64),
 });
 
-type NewUser = z.infer<typeof newUserSchema>;
-type User = NewUser & { id: string };
-
 const newUser = newUserSchema.parse({
   email: "joe@dragonflydb.io",
   nickname: "joe_df",
   password: "password1234Abcd#",
 });
-
 console.log(newUser);
+
+type NewUser = z.infer<typeof newUserSchema>;
+type User = NewUser & { id: string };

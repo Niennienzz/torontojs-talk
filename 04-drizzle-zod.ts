@@ -1,6 +1,7 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+import { uuidv7 } from 'uuidv7';
 
 const users = pgTable('users', {
     id: uuid('id').primaryKey(),
@@ -13,9 +14,11 @@ const users = pgTable('users', {
 });
 
 const userInsertSchema = createInsertSchema(users, {
-    id: (schema) => schema.id.uuid(),
+    id: (schema) => schema.id.default(uuidv7),
     email: (schema) => schema.email.email(),
     nickname: (schema) => schema.nickname.min(5).max(32),
     passwordHashHex: (schema) => schema.passwordHashHex.length(64),
     passwordSaltHex: (schema) => schema.passwordSaltHex.length(32),
 });
+
+type UserInsert = z.infer<typeof userInsertSchema>;

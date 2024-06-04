@@ -9,9 +9,13 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.32.31",
     "@types/node": "^20.13.0",
     "@types/uuid": "^9.0.8",
+    "ajv": "^8.15.0",
+    "ajv-formats": "^3.0.1",
     "drizzle-orm": "^0.31.0",
+    "drizzle-typebox": "^0.1.1",
     "drizzle-zod": "^0.5.1",
     "uuid": "^9.0.1",
     "uuidv7": "^1.0.0",
