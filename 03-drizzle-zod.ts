@@ -19,9 +19,3 @@ const userInsertSchema = createInsertSchema(users, {
     passwordHashHex: (schema) => schema.passwordHashHex.length(64),
     passwordSaltHex: (schema) => schema.passwordSaltHex.length(32),
 });
-
-const userRequest = userInsertSchema
-    .pick({ email: true, nickname: true })
-    .setKey("password", z.string().min(10).max(64));
-
-type UserRequest = z.infer<typeof userRequest>;
