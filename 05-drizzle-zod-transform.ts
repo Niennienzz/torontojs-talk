@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-import * as crypto from "crypto";
+import * as crypto from 'crypto';
 import { uuidv7 } from 'uuidv7';
 
 const users = pgTable('users', {
@@ -35,7 +35,7 @@ const passwordSchema = z.string().transform(
 
 const userRequestSchema = userInsertSchema
     .pick({ email: true, nickname: true })
-    .setKey("password", z.string().min(10).max(64))
+    .setKey('password', z.string().min(10).max(64))
     .transform((value) => {
         const { passwordHashHex, passwordSaltHex } = passwordSchema.parse(value.password);
         return {
@@ -47,20 +47,21 @@ const userRequestSchema = userInsertSchema
     });
 
 const rawUserRequest = {
-    email: "joe@dragonflydb.io",
-    nickname: "joe_df",
-    password: "password123",
+    email: 'joe@dragonflydb.io',
+    nickname: 'joe_df',
+    password: 'password123',
 };
-console.log("=== Raw Request ===\n", rawUserRequest);
+console.log('=== Raw Request ===\n', rawUserRequest);
 
 const userRequest = userRequestSchema.parse(rawUserRequest);
-console.log("=== After Request Schema ===\n", userRequest);
+console.log('=== After Request Schema ===\n', userRequest);
 
 const userInsert = userInsertSchema.parse(userRequest);
-console.log("=== After Insert Schema ===\n", userInsert);
+console.log('=== After Insert Schema ===\n', userInsert);
 
 type UserRawRequest = typeof rawUserRequest;
 type UserRequest = z.infer<typeof userRequestSchema>;
 type UserInsert = z.infer<typeof userInsertSchema>;
 
 export type { UserRawRequest, UserRequest, UserInsert };
+export { users, userInsertSchema, userRequestSchema };

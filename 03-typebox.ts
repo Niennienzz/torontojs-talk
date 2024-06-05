@@ -3,7 +3,7 @@ import ajv from './ajv';
 
 const newUserSchema = Type.Object({
     email: Type.String({
-        format: "email",
+        format: 'email',
     }),
     nickname: Type.String({
         minLength: 5,
@@ -17,9 +17,9 @@ const newUserSchema = Type.Object({
 
 const checker = ajv.compile(newUserSchema);
 const ok = checker({
-    email: "joe@dragonflydb.io",
-    nickname: "joe_df",
-    password: "password1234Abcd#",
+    email: 'joe@dragonflydb.io',
+    nickname: 'joe_df',
+    password: 'password1234Abcd#',
 });
 console.log(ok);
 

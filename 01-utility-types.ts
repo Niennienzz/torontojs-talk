@@ -5,6 +5,6 @@ type User = {
   password: string;
 };
 
-type NewUser = Omit<User, "id">;
+type NewUser = Omit<User, 'id'>;
 
-type UserResponse = Omit<User, "password">;
+type UserResponse = Omit<User, 'password'>;

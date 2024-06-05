@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const newUserSchema = z.object({
   email: z.string().email(),
@@ -7,9 +7,9 @@ const newUserSchema = z.object({
 });
 
 const newUser = newUserSchema.parse({
-  email: "joe@dragonflydb.io",
-  nickname: "joe_df",
-  password: "password1234Abcd#",
+  email: 'joe@dragonflydb.io',
+  nickname: 'joe_df',
+  password: 'password1234Abcd#',
 });
 console.log(newUser);
 
