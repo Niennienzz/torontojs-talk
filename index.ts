@@ -8,12 +8,14 @@ app.get('/', (c) => {
     return c.text('Hello Hono!');
 });
 
-app.post(
+const route = app.post(
     '/users',
     zValidator('json', userRequestSchema),
     (c) => {
+        const validated = c.req.valid('json');
         return c.text('OK!');
     }
 );
 
+export type AppType = typeof route;
 export default app;
