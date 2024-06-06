@@ -23,45 +23,33 @@ const userInsertSchema = createInsertSchema(users, {
 });
 
 const passwordSchema = z.string().transform(
-    (value) => {
+    (passwordPlainText) => {
         const passwordSaltHex = crypto.randomBytes(16).toString('hex');
         const hasher = crypto.createHash('sha256');
-        hasher.update(value);
+        hasher.update(passwordPlainText);
         hasher.update(passwordSaltHex);
         const passwordHashHex = hasher.digest('hex');
         return { passwordHashHex, passwordSaltHex };
     },
 );
 
-const userRequestSchema = userInsertSchema
+const userRawRequestSchema = userInsertSchema
     .pick({ email: true, nickname: true })
-    .setKey('password', z.string().min(10).max(64))
-    .transform((value) => {
-        const { passwordHashHex, passwordSaltHex } = passwordSchema.parse(value.password);
-        return {
-            email: value.email,
-            nickname: value.nickname,
-            passwordHashHex,
-            passwordSaltHex,
-        };
-    });
+    .setKey('password', z.string().min(10).max(64));
 
-const rawUserRequest = {
-    email: 'joe@dragonflydb.io',
-    nickname: 'joe_df',
-    password: 'password123',
-};
-console.log('=== Raw Request ===\n', rawUserRequest);
+const userRequestSchema = userRawRequestSchema.transform((user) => {
+    const { passwordHashHex, passwordSaltHex } = passwordSchema.parse(user.password);
+    return {
+        email: user.email,
+        nickname: user.nickname,
+        passwordHashHex,
+        passwordSaltHex,
+    };
+});
 
-const userRequest = userRequestSchema.parse(rawUserRequest);
-console.log('=== After Request Schema ===\n', userRequest);
-
-const userInsert = userInsertSchema.parse(userRequest);
-console.log('=== After Insert Schema ===\n', userInsert);
-
-type UserRawRequest = typeof rawUserRequest;
+type UserRawRequest = z.infer<typeof userRawRequestSchema>;
 type UserRequest = z.infer<typeof userRequestSchema>;
 type UserInsert = z.infer<typeof userInsertSchema>;
 
 export type { UserRawRequest, UserRequest, UserInsert };
-export { users, userInsertSchema, userRequestSchema };
+export { users, userRequestSchema, userInsertSchema };

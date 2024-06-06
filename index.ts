@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { userRequestSchema } from './05-drizzle-zod-transform';
+import { userRequestSchema, userInsertSchema } from './05-drizzle-zod-transform';
 
 const app = new Hono();
 
@@ -12,7 +12,10 @@ const route = app.post(
     '/users',
     zValidator('json', userRequestSchema),
     (c) => {
-        const validated = c.req.valid('json');
+        const userRequest = c.req.valid('json');
+        const userInsert = userInsertSchema.parse(userRequest);
+        console.log('=== After Request Schema ===\n', userRequest);
+        console.log('=== After Insert Schema ===\n', userInsert);
         return c.text('OK!');
     }
 );
